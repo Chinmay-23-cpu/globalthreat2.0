@@ -54,8 +54,25 @@
           <span class="live-indicator__text">LIVE</span>
         </div>
       </div>
-
-
+      
+      <!-- Global Search -->
+      <div class="header__search">
+        <div class="search-input">
+          <svg class="search-input__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.7422 10.3439C12.5329 9.2673 13 7.9382 13 6.5C13 2.91015 10.0899 0 6.5 0C2.91015 0 0 2.91015 0 6.5C0 10.0899 2.91015 13 6.5 13C7.9382 13 9.2673 12.5329 10.3439 11.7422L14.1464 15.5456C14.3417 15.7409 14.6583 15.7409 14.8536 15.5456L15.5456 14.8536C15.7409 14.6583 15.7409 14.3417 15.5456 14.1464L11.7422 10.3439ZM6.5 11C8.98528 11 11 8.98528 11 6.5C11 4.01472 8.98528 2 6.5 2C4.01472 2 2 4.01472 2 6.5C2 8.98528 4.01472 11 6.5 11Z"/>
+          </svg>
+          <input 
+            type="text" 
+            id="global-search" 
+            class="search-input__field" 
+            placeholder="Search intelligence..."
+            aria-label="Search"
+            autocomplete="off"
+          >
+          <kbd class="search-input__shortcut">/</kbd>
+        </div>
+        <div id="search-results" class="search-results" role="listbox" aria-hidden="true"></div>
+      </div>
 
       <div class="app-header__actions">
         <button id="theme-toggle" class="btn btn--icon" aria-label="Toggle theme">
@@ -150,7 +167,13 @@
         <button id="load-more" class="btn btn--secondary btn--full" hidden>Load More</button>
       </aside>
       
-
+      
+      <!-- Sidebar Toggle Handle -->
+      <button id="sidebar-toggle-handle" class="sidebar-toggle-handle glass-panel" aria-label="Toggle intelligence feed">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
     </main>
 
     <!-- Event Detail Drawer -->
