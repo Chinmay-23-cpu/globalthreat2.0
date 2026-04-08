@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Real-time world events monitoring - conflicts, climate, disasters, and global intelligence">
+  <meta name="theme-color" content="#0d1117">
+  <title>World Events Monitor | Real-time Global Intelligence</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- MapLibre GL -->
+  <link href="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <!-- Alert Ticker -->
+  <div id="alert-ticker" class="alert-ticker" role="alert" aria-live="polite" aria-atomic="true">
+    <div class="alert-ticker__content">
+      <span class="alert-ticker__icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm0 12a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm0-9a1 1 0 0 0-1 1v6a1 1 0 2 0V4a1 1 0 0 0-1-1z"/>
+        </svg>
+      </span>
+      <span class="alert-ticker__text">Initializing real-time monitoring...</span>
+    </div>
+    <button class="alert-ticker__close" aria-label="Dismiss alert">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+        <path d="M7 6.293l4.146-4.147a.5.5 0 0 1 .708.708L7.707 7l4.147 4.146a.5.5 0 0 1-.708.708L7 7.707l-4.146 4.147a.5.5 0 0 1-.708-.708L6.293 7 2.146 2.854a.5.5 0 1 1 .708-.708L7 6.293z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- App Container -->
+  <div id="app" class="app">
+    <!-- Header -->
+    <header class="app-header" role="banner">
+      <div class="app-header__brand">
+        <div class="app-header__logo">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="14" stroke="#ff3366" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="16" r="4" fill="#ff3366"/>
+            <path d="M16 2v6M16 24v6M2 16h6M24 16h6" stroke="#ff3366" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="app-header__title">WORLDMONITOR</span>
+        </div>
+        <div class="live-indicator">
+          <span class="live-indicator__pulse"></span>
+          <span class="live-indicator__text">LIVE</span>
+        </div>
+      </div>
+
+      <!-- Global Search -->
+      <div class="app-header__search">
+        <div class="search-input">
+          <svg class="search-input__icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.7422 10.3439C12.5329 9.2673 13 7.9382 13 6.5C13 2.91015 10.0899 0 6.5 0C2.91015 0 0 2.91015 0 6.5C0 10.0899 2.91015 13 6.5 13C7.9382 13 9.2673 12.5329 10.3439 11.7422L14.1464 15.5456C14.3417 15.7409 14.6583 15.7409 14.8536 15.5456L15.5456 14.8536C15.7409 14.6583 15.7409 14.3417 15.5456 14.1464L11.7422 10.3439ZM6.5 11C8.98528 11 11 8.98528 11 6.5C11 4.01472 8.98528 2 6.5 2C4.01472 2 2 4.01472 2 6.5C2 8.98528 4.01472 11 6.5 11Z"/>
+          </svg>
+          <input 
+            type="text" 
+            id="global-search" 
+            class="search-input__field" 
+            placeholder="Search intelligence..."
+            aria-label="Search"
+            autocomplete="off"
+          >
+          <kbd class="search-input__shortcut">/</kbd>
+        </div>
+        <div id="search-results" class="search-results" role="listbox" aria-hidden="true"></div>
+      </div>
+
+      <div class="app-header__actions">
+        <button id="theme-toggle" class="btn btn--icon" aria-label="Toggle theme">
+          <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </button>
+        <div class="app-header__profile">
+          <img src="https://ui-avatars.com/api/?name=OP&background=1a1a1a&color=fff" alt="Operator" class="avatar" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);">
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main" role="main">
+
+      <!-- Map Container -->
+      <div class="map-wrapper" role="application" aria-label="Interactive world map">
+        <div id="map" class="map"></div>
+        
+        <!-- Map Controls -->
+        <div class="map-controls" role="toolbar" aria-label="Map navigation controls">
+          <button class="map-control" id="zoom-in" aria-label="Zoom in">+</button>
+          <button class="map-control" id="zoom-out" aria-label="Zoom out">-</button>
+          <button class="map-control" id="reset-view" aria-label="Reset map view">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 3a5 5 0 100 10A5 5 0 008 3zm0 9a4 4 0 110-8 4 4 0 010 8z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Time Range Controls Removed -->
+
+
+        <!-- Legend -->
+        <div class="map-legend" role="region" aria-label="Map legend">
+          <h4 class="map-legend__title">Event Types</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <span class="legend-item__marker" style="background: #ff6b6b"></span>
+              <span class="legend-item__label">Conflict</span>
+              <input type="checkbox" class="legend-item__checkbox" data-layer="conflicts" checked>
+            </div>
+            <div class="legend-item">
+              <span class="legend-item__marker" style="background: #ff9ff3"></span>
+              <span class="legend-item__label">Disease Outbreaks</span>
+              <input type="checkbox" class="legend-item__checkbox" data-layer="disease" checked>
+            </div>
+            <div class="legend-item">
+              <span class="legend-item__marker" style="background: #ff6b6b"></span>
+              <span class="legend-item__label">Wildfire</span>
+              <input type="checkbox" class="legend-item__checkbox" data-layer="wildfire" checked>
+            </div>
+            <div class="legend-item">
+              <span class="legend-item__marker" style="background: #48dbfb"></span>
+              <span class="legend-item__label">Earthquake</span>
+              <input type="checkbox" class="legend-item__checkbox" data-layer="natural" checked>
+            </div>
+            <div class="legend-item">
+              <span class="legend-item__marker" style="background: #54a0ff"></span>
+              <span class="legend-item__label">Weather</span>
+              <input type="checkbox" class="legend-item__checkbox" data-layer="climate" checked>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar: Event Feed -->
+      <aside id="event-panel" class="feed-panel glass-panel" role="complementary" aria-label="Live intelligence feed">
+        <div class="feed-panel__header">
+          <h2 class="feed-panel__title">Live Intelligence</h2>
+          <span id="event-count" class="feed-panel__count">0 Events</span>
+        </div>
+        <!-- Controls removed -->
+        <div id="event-list" class="event-list" role="feed" aria-busy="false">
+          <!-- Events populated by JS -->
+          <div class="event-list__empty">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="24" cy="24" r="20"/>
+              <path d="M24 14v10l6 6"/>
+            </svg>
+            <p>Loading events...</p>
+          </div>
+        </div>
+        <button id="load-more" class="btn btn--secondary btn--full" hidden>Load More</button>
+      </aside>
+    </main>
+
+    <!-- Event Detail Drawer -->
+    <div id="detail-overlay" class="detail-drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detail-title">
+      <div class="detail-drawer__backdrop" id="detail-close-backdrop"></div>
+      <div class="detail-drawer__panel glass-panel">
+        <div class="detail-drawer__header">
+          <h2 id="detail-title" class="detail-drawer__title">Briefing Details</h2>
+          <button id="detail-close" class="btn btn--icon detail-drawer__close" aria-label="Close details">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </div>
+        <div id="detail-content" class="detail-drawer__content">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="notification-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="notification-title">
+      <div class="notification-panel__header">
+        <h3 id="notification-title" class="notification-panel__title">Notifications</h3>
+        <button id="notification-close" class="btn btn--ghost btn--icon" aria-label="Close notifications">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414L10 8.586z"/>
+          </svg>
+        </button>
+      </div>
+      <div id="notification-list" class="notification-list">
+        <!-- Populated by JS -->
+        <div class="notification-list__empty">No new notifications</div>
+      </div>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container" class="chatbot-container">
+      <button id="chatbot-toggle" class="chatbot-toggle glass-panel" aria-label="Open global intelligence chat">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+        </svg>
+      </button>
+
+      <div id="chatbot-window" class="chatbot-window glass-panel" hidden>
+        <div class="chatbot-header">
+          <div class="chatbot-title">
+            <span class="live-indicator__pulse"></span>
+            <h5>OSINT Assistant</h5>
+          </div>
+          <button id="chatbot-close" class="btn btn--icon" aria-label="Close Chat">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+            </svg>
+          </button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+          <div class="chat-message ai-message">
+            <p>Intelligence assistant ready. Based on global event tracking, what do you need an analysis of?</p>
+          </div>
+        </div>
+        <div class="chatbot-input">
+          <input type="text" id="chatbot-input-field" placeholder="Ask about global events..." aria-label="Chat input">
+          <button id="chatbot-send" class="btn btn--primary btn--icon" aria-label="Send message">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

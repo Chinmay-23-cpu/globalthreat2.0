@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+  <!-- Background -->
+  <rect width="390" height="844" fill="#0d1117"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="390" height="56" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  
+  <!-- Menu Button -->
+  <rect x="12" y="12" width="32" height="32" rx="6" fill="#21262d"/>
+  <text x="20" y="33" fill="#f0f6fc" font-size="20">☰</text>
+  
+  <!-- Logo -->
+  <circle cx="55" cy="28" r="10" stroke="#58a6ff" stroke-width="2" fill="none"/>
+  <circle cx="55" cy="28" r="2.5" fill="#58a6ff"/>
+  <text x="75" y="33" fill="#f0f6fc" font-family="Inter, sans-serif" font-size="16" font-weight="600">Events</text>
+  
+  <!-- Notification Icon -->
+  <rect x="340" y="12" width="32" height="32" rx="6" fill="#21262d"/>
+  <text x="348" y="33" fill="#8b949e" font-size="18">🔔</text>
+  <circle cx="365" cy="18" r="6" fill="#da3633"/>
+  <text x="362" y="21" fill="white" font-size="8" font-weight="600">3</text>
+  
+  <!-- Search Bar -->
+  <rect x="12" y="68" width="366" height="44" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+  <text x="48" y="95" fill="#6e7681" font-family="Inter, sans-serif" font-size="14">Search location...</text>
+  
+  <!-- Map Area -->
+  <rect x="0" y="120" width="390" height="524" fill="#0d1117"/>
+  
+  <!-- Map Markers -->
+  <circle cx="150" cy="250" r="10" fill="#ff6b6b" stroke="white" stroke-width="2"/>
+  <circle cx="280" cy="320" r="10" fill="#ff9f43" stroke="white" stroke-width="2"/>
+  <circle cx="100" cy="400" r="10" fill="#48dbfb" stroke="white" stroke-width="2"/>
+  <circle cx="300" cy="180" r="10" fill="#ff6b6b" stroke="white" stroke-width="2"/>
+  <circle cx="200" cy="280" r="8" fill="#54a0ff" stroke="white" stroke-width="2"/>
+  
+  <!-- Cluster -->
+  <circle cx="220" cy="220" r="22" fill="rgba(88, 166, 255, 0.8)" stroke="white" stroke-width="2"/>
+  <text x="220" y="226" fill="white" font-family="Inter, sans-serif" font-size="12" font-weight="600" text-anchor="middle">8</text>
+  
+  <!-- Map Controls (Floating) -->
+  <rect x="338" y="520" width="40" height="100" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="358" y="548" fill="#f0f6fc" font-size="20" text-anchor="middle">+</text>
+  <line x1="343" y1="560" x2="373" y2="560" stroke="#30363d" stroke-width="1"/>
+  <text x="358" y="588" fill="#f0f6fc" font-size="20" text-anchor="middle">-</text>
+  <line x1="343" y1="600" x2="373" y2="600" stroke="#30363d" stroke-width="1"/>
+  <circle cx="358" cy="612" r="8" stroke="#8b949e" stroke-width="1.5" fill="none"/>
+  
+  <!-- Time Controls (Bottom Sheet Style) -->
+  <rect x="12" y="440" width="366" height="84" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  
+  <text x="28" y="468" fill="#8b949e" font-family="Inter, sans-serif" font-size="11" font-weight="600">TIME</text>
+  
+  <rect x="280" y="458" width="45" height="22" rx="6" fill="#58a6ff"/>
+  <text x="302" y="473" fill="white" font-family="Inter, sans-serif" font-size="10" font-weight="500" text-anchor="middle">24h</text>
+  
+  <rect x="332" y="458" width="38" height="22" rx="6" fill="#21262d"/>
+  <text x="351" y="473" fill="#8b949e" font-family="Inter, sans-serif" font-size="10" font-weight="500" text-anchor="middle">7d</text>
+  
+  <!-- Play Button -->
+  <rect x="28" y="485" width="32" height="32" rx="6" fill="#21262d"/>
+  <path d="M38 495l10 6-10 6v-12z" fill="#f0f6fc"/>
+  
+  <!-- Slider -->
+  <rect x="70" y="498" width="250" height="4" rx="2" fill="#30363d"/>
+  <circle cx="300" cy="500" r="7" fill="#58a6ff" stroke="white" stroke-width="2"/>
+  
+  <text x="328" y="504" fill="#f0f6fc" font-family="JetBrains Mono, monospace" font-size="12">Now</text>
+  
+  <!-- Event List (Bottom) -->
+  <rect x="0" y="644" width="390" height="200" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  
+  <!-- Handle -->
+  <rect x="160" y="652" width="70" height="4" rx="2" fill="#30363d"/>
+  
+  <!-- Header -->
+  <text x="20" y="680" fill="#f0f6fc" font-family="Inter, sans-serif" font-size="16" font-weight="600">Recent Events</text>
+  <rect x="330" y="670" width="40" height="24" rx="6" fill="#21262d"/>
+  <text x="350" y="687" fill="#8b949e" font-family="Inter, sans-serif" font-size="12" font-weight="600" text-anchor="middle">47</text>
+  
+  <!-- Event Cards (Horizontal Scroll) -->
+  <rect x="12" y="700" width="280" height="130" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+  <rect x="28" y="715" width="36" height="36" rx="6" fill="#ff6b6b"/>
+  <text x="75" y="738" fill="#f0f6fc" font-family="Inter, sans-serif" font-size="14" font-weight="500">M6.2 Earthquake</text>
+  <rect x="220" y="720" width="60" height="18" rx="4" fill="#d29922"/>
+  <text x="250" y="732" fill="white" font-size="9" font-weight="600" text-anchor="middle">STRONG</text>
+  <text x="75" y="760" fill="#8b949e" font-size="12">Near Tokyo, Japan</text>
+  <text x="75" y="780" fill="#6e7681" font-size="11">2h ago • USGS</text>
+  
+  <!-- Second Card (Partial) -->
+  <rect x="304" y="700" width="280" height="130" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Alert Banner -->
+  <rect x="0" y="0" width="390" height="44" fill="#da3633"/>
+  <text x="44" y="28" fill="white" font-family="Inter, sans-serif" font-size="14" font-weight="500">URGENT: M6.2 Earthquake - Japan</text>
+  <text x="360" y="28" fill="white" font-size="20">×</text>
+  
+  <!-- Detail Modal (Bottom Sheet) -->
+  <rect x="0" y="300" width="390" height="544" rx="16" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="160" y="312" width="70" height="4" rx="2" fill="#30363d"/>
+  
+  <rect x="356" y="320" width="24" height="24" rx="6" fill="#21262d"/>
+  <text x="362" y="338" fill="#8b949e" font-size="20">×</text>
+  
+  <rect x="20" y="340" width="48" height="48" rx="12" fill="#ff6b6b"/>
+  <text x="80" y="370" fill="#f0f6fc" font-family="Inter, sans-serif" font-size="20" font-weight="600">M6.2 Earthquake</text>
+  <text x="80" y="395" fill="#da3633" font-size="13">STRONG</text>
+  <text x="145" y="395" fill="#8b949e" font-size="13">Tokyo, Japan</text>
+  
+  <text x="20" y="430" fill="#6e7681" font-family="Inter, sans-serif" font-size="11" font-weight="600">DESCRIPTION</text>
+  <text x="20" y="455" fill="#8b949e" font-family="Inter, sans-serif" font-size="14">A magnitude 6.2 earthquake</text>
+  <text x="20" y="475" fill="#8b949e" font-family="Inter, sans-serif" font-size="14">occurred 50km east of Tokyo.</text>
+  <text x="20" y="495" fill="#8b949e" font-family="Inter, sans-serif" font-size="14">No tsunami warning issued.</text>
+  
+  <text x="20" y="530" fill="#6e7681" font-family="Inter, sans-serif" font-size="11" font-weight="600">DETAILS</text>
+  
+  <rect x="20" y="545" width="100" height="50" rx="8" fill="#21262d"/>
+  <text x="30" y="565" fill="#6e7681" font-size="10">CONFIDENCE</text>
+  <text x="30" y="585" fill="#f0f6fc" font-family="JetBrains Mono, monospace" font-size="16" font-weight="600">95%</text>
+  
+  <rect x="135" y="545" width="100" height="50" rx="8" fill="#21262d"/>
+  <text x="145" y="565" fill="#6e7681" font-size="10">TYPE</text>
+  <text x="145" y="585" fill="#f0f6fc" font-family="Inter, sans-serif" font-size="16" font-weight="600">Quake</text>
+  
+  <rect x="250" y="545" width="120" height="50" rx="8" fill="#21262d"/>
+  <text x="260" y="565" fill="#6e7681" font-size="10">DEPTH</text>
+  <text x="260" y="585" fill="#f0f6fc" font-family="JetBrains Mono, monospace" font-size="16" font-weight="600">45km</text>
+  
+  <rect x="20" y="620" width="350" height="48" rx="8" fill="#58a6ff"/>
+  <text x="195" y="650" fill="white" font-family="Inter, sans-serif" font-size="16" font-weight="500" text-anchor="middle">View Source</text>
+  
+  <!-- Labels -->
+  <text x="195" y="830" fill="#58a6ff" font-family="Inter, sans-serif" font-size="18" font-weight="700" text-anchor="middle">MOBILE WIREFRAME</text>
+  <text x="195" y="850" fill="#6e7681" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">390 × 844 viewport (iPhone 14)</text>
+</svg>
