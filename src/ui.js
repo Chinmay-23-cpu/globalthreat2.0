@@ -97,6 +97,24 @@ export class UIController {
       performSearch(e.target.value.trim());
     });
 
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+          console.log(`🎯 Setting target region to: ${query}`);
+          this.events.setTargetRegion(query);
+          this.showAlert(`Localized feed: ${query}`, 'info');
+          resultsContainer.classList.remove('search-results--visible');
+          
+          // Trigger flyTo for the region (basic geocoding simulation)
+          const matched = this.simulateSearchResults(query)[0];
+          if (matched) {
+            this.map.flyTo([matched.lng, matched.lat], 6);
+          }
+        }
+      }
+    });
+
     searchInput.addEventListener('focus', () => {
       if (searchInput.value.trim().length >= APP_CONFIG.search.minChars) {
         resultsContainer.classList.add('search-results--visible');

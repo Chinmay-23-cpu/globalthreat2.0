@@ -4,7 +4,8 @@ import { GoogleGenAI } from '@google/genai';
  * ChatbotController manages the OSINT Assistant UI and Gemini API integration.
  */
 export class ChatbotController {
-  constructor() {
+  constructor(eventsManager) {
+    this.events = eventsManager;
     this.apiKey = 'AIzaSyDEHM9OaA8kY7GqdoybMJ0fJeTeIwmE8yA';
     this.ai = new GoogleGenAI({ apiKey: this.apiKey });
     this.chatSession = null;
@@ -39,7 +40,10 @@ export class ChatbotController {
 
   initChatSession() {
     // We restrict the persona and scope through system instructions.
+    const regionContext = this.events?.targetRegion ? `The user is currently focused on the region: ${this.events.targetRegion.toUpperCase()}. Prioritize information about this area.` : "The user is currently searching globally.";
+    
     const systemInstruction = `You are an OSINT (Open Source Intelligence) voice assistant integrated into a Global Events Monitor dashboard. Your purpose is to provide analysis, summaries, and information strictly related to world events, geopolitics, conflicts, natural disasters, climate events, and disease outbreaks.
+${regionContext}
 Do NOT answer questions or provide information outside of this scope (e.g., coding help, general recipes, pop culture, personal advice). 
 CRITICAL RULE: Keep your output short, summarized, and strictly to the point. Your responses MUST NOT exceed 10 lines of text. Do not use overly complex formatting because your text will be read aloud by an AI voice. Maintain an objective, professional, and analytical tone.`;
 
@@ -90,9 +94,8 @@ CRITICAL RULE: Keep your output short, summarized, and strictly to the point. Yo
     const typingIndicator = this.renderTypingIndicator();
 
     try {
-      if (!this.chatSession) {
-        throw new Error("Chat session not initialized");
-      }
+      // Optionally refresh session with new location context if region changed
+      this.initChatSession();
 
       // Send to Gemini
       const response = await this.chatSession.sendMessage({ message: text });

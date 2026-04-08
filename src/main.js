@@ -54,7 +54,7 @@ class WorldEventsApp {
       this.ui = new UIController(this.events, this.map);
 
       // Initialize Chatbot controller
-      this.chatbot = new ChatbotController();
+      this.chatbot = new ChatbotController(this.events);
 
       // Ensure UI reflects the URL parameters
       if (urlParams.layers) {

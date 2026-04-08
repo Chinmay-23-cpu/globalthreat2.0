@@ -18,6 +18,7 @@ export class EventsManager {
     this.eventSource = null;
     this.lastUpdate = null;
     this.synthEvents = []; // Cache for stable synthesized events
+    this.targetRegion = null; // New state for localized intelligence
     
     this.init();
   }
@@ -219,8 +220,19 @@ export class EventsManager {
             }
           }
           
+          // Apply regional filtering if targetRegion is set
+          let finalPool = [...valyuEvents, ...weatherEvents, ...this.synthEvents];
+          if (this.targetRegion) {
+            const regionLower = this.targetRegion.toLowerCase();
+            finalPool = finalPool.filter(evt => 
+              (evt.location && evt.location.toLowerCase().includes(regionLower)) ||
+              (evt.title && evt.title.toLowerCase().includes(regionLower)) ||
+              (evt.description && evt.description.toLowerCase().includes(regionLower))
+            );
+          }
+
           // Push everything that applies layer-wise
-          [...valyuEvents, ...weatherEvents, ...this.synthEvents].forEach(evt => {
+          finalPool.forEach(evt => {
              if (this.activeLayers.has(evt.type)) {
                 events.push(evt);
              }
@@ -328,7 +340,9 @@ export class EventsManager {
     
     try {
       // Global intelligence multi-topic query
-      const query = "breaking news conflict war geopolitical crisis diplomatic sanctions disease outbreak pandemic illness";
+      const query = this.targetRegion 
+        ? `breaking news conflict war in ${this.targetRegion} geopolitical crisis disease outbreak in ${this.targetRegion}`
+        : "breaking news conflict war geopolitical crisis diplomatic sanctions disease outbreak pandemic illness";
       
       const response = await fetch(API_ENDPOINTS.valyu, {
         method: 'POST',
@@ -545,7 +559,7 @@ export class EventsManager {
     const prompt = `Act as an OSINT intelligence feed. Generate realistic news events for the following categories:
 ${Object.entries(needed).filter(([_, count]) => count > 0).map(([type, count]) => `- ${type}: ${count} events`).join('\n')}
 
-CRITICAL: Focus significantly on events occurring in INDIA (at least 40% of the events should be in India).
+${this.targetRegion ? `CRITICAL: All generated events MUST occur strictly within ${this.targetRegion.toUpperCase()}. Ensure headlines and descriptions specify locations within ${this.targetRegion}.` : 'CRITICAL: Focus significantly on events occurring in INDIA (at least 40% of the events should be in India).'}
 For weather anomalies (climate), include things like heatwaves, unusual floods, or severe storms.
 For wildfires, include active forest fires.
 
@@ -735,5 +749,12 @@ Do not include any markdown or wrapper text. Ensure total output array matches e
     if (this.eventSource) {
       this.eventSource.close();
     }
+  }
+
+  setTargetRegion(region) {
+    this.targetRegion = region;
+    this._useMockData = false; // Switch to real data to fetch localized news
+    this.synthEvents = []; // Reset synthesis for new region
+    this.loadEvents();
   }
 }
