@@ -81,6 +81,8 @@ export class UIController {
     const searchInput = document.getElementById('global-search');
     const resultsContainer = document.getElementById('search-results');
 
+    if (!searchInput || !resultsContainer) return;
+
     const performSearch = debounce(async (query) => {
       if (query.length < APP_CONFIG.search.minChars) {
         resultsContainer.classList.remove('search-results--visible');
@@ -97,19 +99,24 @@ export class UIController {
       performSearch(e.target.value.trim());
     });
 
-    searchInput.addEventListener('keydown', (e) => {
+    searchInput.addEventListener('keydown', async (e) => {
       if (e.key === 'Enter') {
         const query = searchInput.value.trim();
         if (query) {
-          console.log(`🎯 Setting target region to: ${query}`);
-          this.events.setTargetRegion(query);
-          this.showAlert(`Localized feed: ${query}`, 'info');
+          console.log(`🔍 Zooming map to: ${query}`);
           resultsContainer.classList.remove('search-results--visible');
           
-          // Trigger flyTo for the region (basic geocoding simulation)
-          const matched = this.simulateSearchResults(query)[0];
-          if (matched) {
-            this.map.flyTo([matched.lng, matched.lat], 6);
+          // Use precise geocoding via Gemini
+          const coords = await this.events.getLocationCoordinates(query);
+          if (coords) {
+            console.log(`📍 Precise Geocoding:`, coords);
+            this.map.flyTo([coords.lng, coords.lat], 10);
+          } else {
+            // Fallback: Check local results
+            const matched = this.simulateSearchResults(query)[0];
+            if (matched) {
+              this.map.flyTo([matched.lng, matched.lat], 6);
+            }
           }
         }
       }
@@ -130,7 +137,7 @@ export class UIController {
 
     // Keyboard shortcut
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'f' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
+      if (searchInput && e.key === 'f' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
         e.preventDefault();
         searchInput.focus();
       }
@@ -167,13 +174,13 @@ export class UIController {
     container.innerHTML = results.map((result, index) => `
       <div class="search-result" data-index="${index}" data-lat="${result.lat}" data-lng="${result.lng}">
         <div class="search-result__icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
             <path d="M10 0a5 5 0 00-5 5c0 5 5 11 5 11s5-6 5-11a5 5 0 00-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z"/>
           </svg>
         </div>
-        <div class="search-result__content">
-          <div class="search-result__title">${sanitizeHtml(result.title)}</div>
-          <div class="search-result__subtitle">${sanitizeHtml(result.subtitle)}</div>
+        <div class="search-result__info">
+          <span class="search-result__title">${sanitizeHtml(result.title)}</span>
+          <span class="search-result__subtitle">${sanitizeHtml(result.subtitle)}</span>
         </div>
       </div>
     `).join('');
@@ -249,9 +256,37 @@ export class UIController {
   bindHeaderControls() {
     // Theme toggle
     const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      this.toggleTheme();
-    });
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        this.toggleTheme();
+      });
+    }
+
+    // Sidebar collapse toggle (handle)
+    const toggleHandle = document.getElementById('sidebar-toggle-handle');
+    const feedPanel = document.getElementById('event-panel');
+    if (toggleHandle && feedPanel) {
+      toggleHandle.addEventListener('click', () => {
+        feedPanel.classList.toggle('feed-panel--collapsed');
+        toggleHandle.classList.toggle('sidebar-toggle-handle--active');
+        
+        const isCollapsed = feedPanel.classList.contains('feed-panel--collapsed');
+        toggleHandle.setAttribute('aria-expanded', !isCollapsed);
+        
+        // Trigger map resize since sidebar changed
+        setTimeout(() => this.map.resize(), 400);
+      });
+    }
+
+    // Secondary collapse btn inside panel
+    const collapseBtn = document.getElementById('feed-collapse-btn');
+    if (collapseBtn && feedPanel) {
+      collapseBtn.addEventListener('click', () => {
+        feedPanel.classList.add('feed-panel--collapsed');
+        toggleHandle.classList.add('sidebar-toggle-handle--active');
+        setTimeout(() => this.map.resize(), 400);
+      });
+    }
 
     // Mobile menu toggle
     const menuToggle = document.getElementById('menu-toggle');

@@ -6,8 +6,11 @@ import { GoogleGenAI } from '@google/genai';
 export class ChatbotController {
   constructor(eventsManager) {
     this.events = eventsManager;
-    this.apiKey = 'AIzaSyDEHM9OaA8kY7GqdoybMJ0fJeTeIwmE8yA';
-    this.ai = new GoogleGenAI({ apiKey: this.apiKey });
+    this.apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!this.apiKey) {
+      console.error("❌ Gemini API Key not found in environment. Please add VITE_GEMINI_API_KEY to your .env file.");
+    }
+    this.ai = new GoogleGenAI({ apiKey: this.apiKey || '' });
     this.chatSession = null;
     this.isOpen = false;
 

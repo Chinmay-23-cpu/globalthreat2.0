@@ -286,7 +286,7 @@ export class EventsManager {
   }
 
   async fetchTomorrowWeather() {
-    const apiKey = process.env.VITE_TOMORROW_IO_API_KEY;
+    const apiKey = import.meta.env?.VITE_TOMORROW_IO_API_KEY || ''; 
     if (!apiKey) return [];
 
     const events = [];
@@ -336,7 +336,7 @@ export class EventsManager {
 
   async fetchValyuEvents() {
     const events = [];
-    const apiKey = process.env.VITE_VALYU_API_KEY || 'val_595a721f47937978b103f1d656fc38ff2fcfe399e753b00ffc625ad51728e6cf';
+    const apiKey = import.meta.env?.VITE_VALYU_API_KEY || 'val_595a721f47937978b103f1d656fc38ff2fcfe399e753b00ffc625ad51728e6cf';
     
     try {
       // Global intelligence multi-topic query
@@ -514,7 +514,7 @@ export class EventsManager {
   }
 
   async extractLocationsViaGemini(rawResults) {
-    const geminiKey = process.env.GEMINI_API_KEY;
+    const geminiKey = import.meta.env?.VITE_GEMINI_API_KEY;
     if (!geminiKey) {
       console.warn('GEMINI_API_KEY not found, skipping location extraction');
       return null;
@@ -549,7 +549,7 @@ export class EventsManager {
     const totalNeeded = Object.values(needed).reduce((a, b) => a + b, 0);
     if (totalNeeded <= 0) return [];
     
-    const geminiKey = process.env.GEMINI_API_KEY;
+    const geminiKey = import.meta.env?.VITE_GEMINI_API_KEY;
     if (!geminiKey) {
       console.warn('GEMINI_API_KEY not found, skipping event generation');
       return [];
@@ -756,5 +756,29 @@ Do not include any markdown or wrapper text. Ensure total output array matches e
     this._useMockData = false; // Switch to real data to fetch localized news
     this.synthEvents = []; // Reset synthesis for new region
     this.loadEvents();
+  }
+
+  /**
+   * Translates a location string (e.g. "Paris") into {lat, lng} using Gemini.
+   */
+  async getLocationCoordinates(query) {
+    const geminiKey = import.meta.env?.VITE_GEMINI_API_KEY; 
+    if (!geminiKey) return null;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`;
+    
+    const prompt = `Act as a geocoder. Translate the following location name into precise Latitude and Longitude coordinates: "${query}". 
+Return ONLY a strict JSON object with keys "lat" and "lng" (decimal numbers). Do not include any other text or markdown.`;
+
+    try {
+      const text = await this.callGeminiWithRetry(url, prompt);
+      const coords = JSON.parse(text);
+      if (typeof coords.lat === 'number' && typeof coords.lng === 'number') {
+        return coords;
+      }
+      return null;
+    } catch (err) {
+      console.warn('Geocoding failed:', err);
+      return null;
+    }
   }
 }
